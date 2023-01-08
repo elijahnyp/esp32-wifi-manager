@@ -233,8 +233,10 @@ static esp_err_t http_server_get_handler(httpd_req_t *req){
 	bool access_from_sta_ip = host != NULL?strstr(host, wifi_manager_get_sta_ip_string()):false;
 	wifi_manager_unlock_sta_ip_string();
 
-
-	if (host != NULL && !strstr(host, DEFAULT_AP_IP) && !access_from_sta_ip) {
+	wifi_mode_t wifi_mode;
+	esp_wifi_get_mode(&wifi_mode);
+	
+	if (host != NULL && !strstr(host, DEFAULT_AP_IP) && !access_from_sta_ip && wifi_mode != WIFI_MODE_STA) {
 
 		/* Captive Portal functionality */
 		/* 302 Redirect to IP of the access point */
